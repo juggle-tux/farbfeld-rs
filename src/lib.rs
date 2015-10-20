@@ -7,4 +7,4 @@ pub use encoder::ImagefileEncoder;
 
 mod decoder;
 mod encoder;
-//pub const HEADER_LEN: u64 = 9+4+4;
+pub const HEADER_LEN: u64 = 9+4+4;
