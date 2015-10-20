@@ -1,0 +1,13 @@
+[package]
+name = "imagefile"
+version = "0.1.0"
+authors = ["Juggle-Tux <juggle-tux@users.noreply.github.com>"]
+
+[dependencies]
+
+image = "*"
+byteorder = "*"
+
+[profile.release]
+
+debug = true
