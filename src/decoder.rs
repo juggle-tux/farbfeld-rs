@@ -15,8 +15,9 @@ pub struct ImagefileDecoder<R> {
 impl<R: Read + Seek> ImagefileDecoder<R> {
     /// Create a new decoder that decodes from the stream `r`
     pub fn new(r: R) -> ImageResult<ImagefileDecoder<R>> {
-        let magic = &mut [0; 9];
         let mut r = r;
+        try!(r.seek(SeekFrom::Start(0)));
+        let magic = &mut [0; 9];
         try!(r.read_exact(magic));
         if magic != "imagefile".as_bytes() {
                 return Err(ImageError::FormatError("unexpected magic number".to_string()))
@@ -39,7 +40,6 @@ impl<R: Read + Seek> ImagefileDecoder<R> {
         match  try!(img.read_image()) {
             DecodingResult::U8(data) => {
                 let (w, h) = try!(img.dimensions());
-                println!("w: {:?}, h: {:?}, data len: {:?}", w, h, data.len());
                 return Ok(RgbaImage::from_raw(w, h, data).expect("failed to load ImageBuffer"))
             },
             _ => Err(ImageError::NotEnoughData),

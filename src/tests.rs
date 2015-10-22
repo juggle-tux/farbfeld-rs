@@ -1,6 +1,7 @@
 use image::{Rgba, RgbaImage};
 use std::io::Cursor;
 
+
 use decoder::ImagefileDecoder;
 use encoder::ImagefileEncoder;
 
