@@ -1,6 +1,6 @@
 use std::io::{Read, Seek, SeekFrom};
 use byteorder::{BigEndian, ReadBytesExt};
-use image::{ColorType, DecodingResult, ImageError, ImageResult, ImageDecoder, RgbaImage};
+use image::{ColorType, ImageError, ImageResult, ImageDecoder, RgbaImage};
 
 pub struct ImagefileDecoder<R> {
     r: R,
@@ -18,7 +18,7 @@ impl<R: Read + Seek> ImagefileDecoder<R> {
         let mut r = r;
         try!(r.seek(SeekFrom::Start(0)));
         let magic = &mut [0; 9];
-        try!(r.read_exact(magic));
+        try!(r.read(magic));
         if magic != "imagefile".as_bytes() {
                 return Err(ImageError::FormatError("unexpected magic number".to_string()))
         }
@@ -37,47 +37,44 @@ impl<R: Read + Seek> ImagefileDecoder<R> {
 
     pub fn into_img(self) -> ImageResult<RgbaImage> {
         let mut img = self;
-        match  try!(img.read_image()) {
-            DecodingResult::U8(data) => {
-                let (w, h) = try!(img.dimensions());
-                return Ok(RgbaImage::from_raw(w, h, data).expect("failed to load ImageBuffer"))
-            },
-            _ => Err(ImageError::NotEnoughData),
-        }
+        let buf = try!(img.read_image());
+        let (w, h) = try!(img.dimensions());
+        return Ok(RgbaImage::from_raw(w, h, buf).expect("failed to load ImageBuffer"))
     }
 }
 
-impl<R: Read + Seek> ImageDecoder for ImagefileDecoder<R> {
-    fn dimensions(&mut self) -> ImageResult<(u32, u32)> {
+
+impl<R: Read + Seek> ImagefileDecoder<R> {
+    pub fn dimensions(&mut self) -> ImageResult<(u32, u32)> {
         Ok((self.width, self.height))
     }
     
-    fn colortype(&mut self) -> ImageResult<ColorType> {
+    pub fn colortype(&mut self) -> ImageResult<ColorType> {
         Ok(ColorType::RGBA(8))
     }
     
-    fn row_len(&mut self) -> ImageResult<usize> {
+    pub fn row_len(&mut self) -> ImageResult<usize> {
         Ok(self.row_len)
     }
     
-    fn read_scanline(&mut self, buf: &mut [u8]) -> ImageResult<u32> {
-        let rows = self.decoded_rows;
+    pub fn read_scanline(&mut self, buf: &mut [u8]) -> ImageResult<u32> {
+        let mut rows = self.decoded_rows;
         if rows < self.height {
             let offset = ::HEADER_LEN + rows as u64 * self.row_len as u64;
             try!(self.r.seek(SeekFrom::Start(offset)));
             try!(self.r.read_exact(&mut buf[..self.row_len]));
-            self.decoded_rows += 1;
+            rows += 1;
         }
-        Ok(self.decoded_rows)
+        Ok(rows)
     }
     
-    fn read_image(&mut self) -> ImageResult<DecodingResult> {
+    pub fn read_image(&mut self) -> ImageResult<Vec<u8>> {
         try!(self.r.seek(SeekFrom::Start(::HEADER_LEN)));
         let num_raw_bytes = self.height as usize * self.row_len;
         let mut buf = vec![0; num_raw_bytes];
         try!(self.r.read_exact(&mut buf));
         self.decoded_rows = self.height;
-        Ok(DecodingResult::U8(buf))
+        Ok(buf)
     }
 }
 
@@ -101,7 +98,7 @@ mod tests {
     #[test]
     fn invalid_magic() {
         let mut img_data = Vec::new();
-        try_panic!(img_data.write(b"testfail."));
+        try_panic!(img_data.write(b"test fail"));
         try_panic!(img_data.write(&IMAGE_DATA[9..]));
         let buf = Cursor::new(img_data);
 
@@ -120,7 +117,7 @@ mod tests {
 
         match ImagefileDecoder::new(buf) {
             Err(e) => match e {
-                ImageError::IoError(_) => return,
+                ImageError::FormatError(_) => return,
                 e => panic!("{:?}", e),
             },
             Ok(_) => panic!("Got Ok expected ImageError::FormatError"),

@@ -5,7 +5,6 @@ extern crate byteorder;
 
 pub type Pixel = image::Rgba<u8>;
 
-
 pub use decoder::ImagefileDecoder;
 pub use encoder::ImagefileEncoder;
 
