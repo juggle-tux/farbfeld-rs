@@ -2,11 +2,10 @@
 name = "imagefile"
 version = "0.1.0"
 authors = ["Juggle-Tux <juggle-tux@users.noreply.github.com>"]
+documentation = "https://juggle-tux.github.io/imagefile-rs"
+homepage = "https://github.com/juggle-tux/imagefile-rs"
+repository = "https://github.com/juggle-tux/imagefile-rs.git"
 
 [dependencies]
 
 byteorder = "*"
-
-[profile.release]
-
-debug = true
