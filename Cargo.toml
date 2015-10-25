@@ -5,7 +5,6 @@ authors = ["Juggle-Tux <juggle-tux@users.noreply.github.com>"]
 
 [dependencies]
 
-image = "*"
 byteorder = "*"
 
 [profile.release]
