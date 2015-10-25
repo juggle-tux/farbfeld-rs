@@ -9,7 +9,6 @@ extern crate byteorder;
 pub use decoder::ImagefileDecoder;
 pub use encoder::ImagefileEncoder;
 
-// yujfytf
 /// Result of an image decoding/encoding process
 pub type ImgfileResult<T> = Result<T, ImgfileError>;
 
