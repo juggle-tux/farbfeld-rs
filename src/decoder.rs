@@ -2,6 +2,7 @@ use std::io::{Read, Seek, SeekFrom};
 use byteorder::{BigEndian, ByteOrder};
 use {HEADER_LEN, ImgfileError, ImgfileResult};
 
+/// A imagefile decoder
 pub struct ImagefileDecoder<R> {
     r: R,
 
@@ -10,7 +11,9 @@ pub struct ImagefileDecoder<R> {
 }
 
 impl<R: Read + Seek> ImagefileDecoder<R> {
-    /// Create a new decoder that decodes from the stream `r`
+    /// Create a new decoder from `r` and parse the header.
+    /// # Failures
+    /// Returns ImgfileError::FormatError if the magic number does not match `imagefile`
     pub fn new(r: R) -> ImgfileResult<ImagefileDecoder<R>> {
         let mut r = r;
         try!(r.seek(SeekFrom::Start(0)));
@@ -26,17 +29,20 @@ impl<R: Read + Seek> ImagefileDecoder<R> {
             height: BigEndian::read_u32(&head[13..]),
         })
     }
-}
 
-impl<R: Read + Seek> ImagefileDecoder<R> {
+    /// Returns the `(width, height)` of the image.
     pub fn dimensions(&mut self) -> (u32, u32) {
         (self.width, self.height)
     }
 
+    /// Returns the lenght in bytes for a row.
     pub fn row_len(&mut self) -> usize {
         self.width as usize * 4
     }
-    
+
+    /// Read a singel row from the image and returns the bytes read.
+    /// # Failures
+    /// Returns a `ImgfileError::ImageEnd` if the `row` is greater as the `height`
     pub fn read_row(&mut self, row: u32,  buf: &mut [u8]) -> ImgfileResult<usize> {
         if row > self.height { return Err(ImgfileError::ImageEnd) }
 
@@ -47,6 +53,7 @@ impl<R: Read + Seek> ImagefileDecoder<R> {
         Ok(row_len)
     }
 
+    /// Read whole image into a `Vec<u8>`
     pub fn read_image(&mut self) -> ImgfileResult<Vec<u8>> {
         try!(self.r.seek(SeekFrom::Start(HEADER_LEN)));
         let num_raw_bytes = self.height as usize * self.row_len();

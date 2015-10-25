@@ -2,9 +2,13 @@ use std::io::Write;
 use byteorder::{BigEndian, WriteBytesExt};
 use {ImgfileResult, ImgfileError};
 
+/// A imagefile encoder
 pub struct ImagefileEncoder<W: Write>(pub W);
 
 impl<W: Write> ImagefileEncoder<W> {
+    /// Encodes a image with `width`, `height` and `data` into a imagefile.
+    /// # Failures
+    /// Returns a `ImgfileError::NotEnoughData` if the provided `data` slice is to short
     pub fn encode(self, width: u32, height: u32, data: &[u8]) -> ImgfileResult<()> {
         let mut w = self.0;
         let len = (width * height) as usize * 4;

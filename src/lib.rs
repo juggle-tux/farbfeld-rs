@@ -1,22 +1,19 @@
+//! Imagefile is a simple image encoding format from suckless.
+//! # Related Links
+//! * http://git.2f30.org/imagefile/tree/SPECIFICATION.
+#![warn(missing_docs)]
+#![warn(unused_qualifications)]
 #![feature(read_exact)]
 extern crate byteorder;
-
-mod decoder;
-mod encoder;
-#[cfg(test)]
-mod tests;
-
-use std::error::Error;
-use std::fmt;
-use std::io;
 
 pub use decoder::ImagefileDecoder;
 pub use encoder::ImagefileEncoder;
 
-const HEADER_LEN: u64 = 9+4+4;
-
+// yujfytf
+/// Result of an image decoding/encoding process
 pub type ImgfileResult<T> = Result<T, ImgfileError>;
 
+/// An enumeration of decoding/encoding Errors
 #[derive(Debug)]
 pub enum ImgfileError {
      /// The Image is not formatted properly
@@ -32,6 +29,17 @@ pub enum ImgfileError {
     /// The end of the image has been reached
     ImageEnd
 }
+
+const HEADER_LEN: u64 = 9+4+4;
+
+mod decoder;
+mod encoder;
+#[cfg(test)]
+mod tests;
+
+use std::error::Error;
+use std::fmt;
+use std::io;
 
 impl fmt::Display for ImgfileError {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
