@@ -1,14 +1,4 @@
 language: rust
 rust:
 - nightly
-after_success: |
-  [ $TRAVIS_BRANCH = master ] &&
-  [ $TRAVIS_PULL_REQUEST = false ] &&
-  cargo doc &&
-  echo '<meta http-equiv=refresh content=0;url=imagefile/index.html>' > target/doc/index.html &&
-  pip install --user ghp-import &&
-  ghp-import -n target/doc &&
-  git push -fq https://${GH_TOKEN}:x-oauth-basic@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
-env:
-  global:
-    secure: fz1ASMEL1Su3ds/iFvMVVQMNd2yBoGG9MYZooNBP5+pyhitlotKJi0Bu5dTI7QmS7n/G7REmcrSr/36SgUnc9nJvmO4lSxzCCU1zYef8IML65pUx9HIFO08RX6YnICnx816TTG/zrFHZTc0TXmOvzs9iuJ9bGZ1ZC3pd5RytMR6Bx2BxQ2HHkTMyFnjYhNbIis7vnUVVg3meOLSv+IMZY9JWqg/C5fyqpwqIkO6grR1/mElxRLM/CSGLFFVz/aDvRemZIYct5qJZdO4OP6+um2hYdj3yvJkTHezikjYqLTU+ikoLrnXE7RWmedUFa00EA2Oj6zSG1I9D+Kp4KP11S65RItlaGkes+18t5XB6fZDdNZ14BkFb9H5KcmFMEiLUM4h7ZYYTJ2kfDoBZkdsG0ce0GL0AyDO2uXvq8AfuwIZPEWUcVD7uvNOpjN4mCo8uo5aAfzRDhXwBZLmoWJY45FdAct7jZLhNAybikChG0Khg7gBhQrB7XkK7CnajGbSON6E8HDNHaen4UGAkL6jYbviCRRVlWFTvm/Bzwgo78SJ982hFc97grX+5b5cwX9Ylr68FLOUK7uwbSNgJtveP8DLH1jK76+cF83QlB8kndBvidH6NI8cRlfTnnROC6Qwj2sWPWFyb8iiEvAgi2XQLq+PT3fVozu23kvXhici2sDQ=
+after_success: .ssh/update-rustdoc
