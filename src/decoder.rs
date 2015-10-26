@@ -3,6 +3,7 @@ use byteorder::{BigEndian, ByteOrder};
 use {HEADER_LEN, ImgfileError, ImgfileResult};
 
 /// A imagefile decoder
+#[derive(Debug)]
 pub struct ImagefileDecoder<R> {
     r: R,
 
@@ -67,7 +68,7 @@ impl<R: Read + Seek> ImagefileDecoder<R> {
 mod tests {
     use std::io::{Cursor, ErrorKind, Write};
     use ImagefileDecoder;
-    use tests::{IMAGE_DATA};
+    use tests::IMAGE_DATA;
     use ImgfileError;
 
     macro_rules! try_panic {

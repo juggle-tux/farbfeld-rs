@@ -1,9 +1,12 @@
 //! Imagefile is a simple image encoding format from suckless.
 //! # Related Links
 //! * http://git.2f30.org/imagefile/tree/SPECIFICATION.
-#![warn(missing_docs)]
-#![warn(unused_qualifications)]
+#![deny(unsafe_code)]
+#![deny(trivial_casts, trivial_numeric_casts)]
+#![deny(missing_docs, missing_debug_implementations, missing_copy_implementations)]
+#![deny(unused_extern_crates, unused_import_braces, unused_qualifications)]
 #![feature(read_exact)]
+
 extern crate byteorder;
 
 pub use decoder::ImagefileDecoder;

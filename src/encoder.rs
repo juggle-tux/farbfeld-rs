@@ -3,6 +3,7 @@ use byteorder::{BigEndian, WriteBytesExt};
 use {ImgfileResult, ImgfileError};
 
 /// A imagefile encoder
+#[derive(Debug)]
 pub struct ImagefileEncoder<W: Write>(pub W);
 
 impl<W: Write> ImagefileEncoder<W> {
