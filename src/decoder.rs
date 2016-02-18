@@ -20,7 +20,7 @@ impl<R: Read + Seek> FarbfeldDecoder<R> {
         try!(r.seek(SeekFrom::Start(0)));
         let head = &mut [0; HEADER_LEN as usize];
         try!(r.read_exact(head));
-        if &head[..8] != "farbfeld".as_bytes() {
+        if &head[..8] != b"farbfeld" {
                 return Err(FarbfeldError::FormatError("unexpected magic number".to_string()))
         }
 
