@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["FarbfeldError","An enumeration of decoding/encoding Errors"]],"struct":[["FarbfeldDecoder","A farbfeld decoder"],["FarbfeldEncoder","A farbfeld encoder"]],"type":[["FarbfeldResult","Result of an image decoding/encoding process"]]});

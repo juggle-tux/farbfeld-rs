@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["FarbfeldEncoder","A farbfeld encoder"]]});
