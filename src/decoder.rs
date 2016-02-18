@@ -38,7 +38,7 @@ impl<R: Read + Seek> FarbfeldDecoder<R> {
 
     /// Returns the length in bytes for a row.
     pub fn row_len(&mut self) -> usize {
-        self.width as usize * 4
+        self.width as usize * 8
     }
 
     /// Read a single row from the image and return the bytes read.
