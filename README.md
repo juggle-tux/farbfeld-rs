@@ -1,3 +1,7 @@
-# Imagefile [![Build Status](https://travis-ci.org/juggle-tux/imagefile-rs.svg?branch=master)](https://travis-ci.org/juggle-tux/imagefile-rs)[![Crates.io](https://img.shields.io/crates/v/imagefile.svg)](https://crates.io/crates/imagefile)
+# farbfeld 
+[![Build Status](https://travis-ci.org/juggle-tux/farbfeld-rs.svg?branch=master)](https://travis-ci.org/juggle-tux/farbfeld-rs)
+[![Crates.io](https://img.shields.io/crates/v/farbfeld.svg)](https://crates.io/crates/farbfeld)
 
-Imagefile is a simple image encoding format from suckless. See [SPECIFICATION](http://git.2f30.org/imagefile/tree/SPECIFICATION).
+Farbfeld is a simple image encoding format from suckless.
+
+The Farbfeld specification is at http://git.suckless.org/farbfeld/tree/FORMAT.

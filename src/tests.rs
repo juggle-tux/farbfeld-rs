@@ -1,13 +1,13 @@
 use std::io::Cursor;
 
-use decoder::ImagefileDecoder;
-use encoder::ImagefileEncoder;
+use decoder::FarbfeldDecoder;
+use encoder::FarbfeldEncoder;
 
 
 #[test]
 fn decode() {
     let buf = Cursor::new(IMAGE_DATA);
-    let mut img = ImagefileDecoder::new(buf).unwrap();
+    let mut img = FarbfeldDecoder::new(buf).unwrap();
     let (w, h) = img.dimensions();
     let data = img.read_image().unwrap();
     assert_eq!(w, 3);
@@ -18,14 +18,14 @@ fn decode() {
 #[test]
 fn encode() {
     let mut buf: Vec<u8>= Vec::new();
-    if let Err(e) = ImagefileEncoder(&mut buf).encode(3, 3, &IMAGE_DATA[::HEADER_LEN as usize..]) {
+    if let Err(e) = FarbfeldEncoder(&mut buf).encode(3, 3, &IMAGE_DATA[::HEADER_LEN as usize..]) {
         panic!(e)
     }
     assert_eq!(&buf[..], IMAGE_DATA)
 }
 
 pub const IMAGE_DATA: &'static [u8] =
-    b"imagefile\
+    b"farbfeld\
       \x00\x00\x00\x03\
       \x00\x00\x00\x03\
       \xff\x00\x00\xff\x00\xff\x00\xff\x00\x00\xff\xff\

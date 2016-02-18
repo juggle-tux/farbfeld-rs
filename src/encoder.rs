@@ -1,20 +1,20 @@
 use std::io::Write;
 use byteorder::{BigEndian, WriteBytesExt};
-use {ImgfileResult, ImgfileError};
+use {FarbfeldResult, FarbfeldError};
 
-/// A imagefile encoder
+/// A farbfeld encoder
 #[derive(Debug)]
-pub struct ImagefileEncoder<W: Write>(pub W);
+pub struct FarbfeldEncoder<W: Write>(pub W);
 
-impl<W: Write> ImagefileEncoder<W> {
-    /// Encodes a image with `width`, `height` and `data` into a imagefile.
+impl<W: Write> FarbfeldEncoder<W> {
+    /// Encodes a image with `width`, `height` and `data` into a farbfeld.
     /// # Failures
-    /// Returns a `ImgfileError::NotEnoughData` if the provided `data` slice is to short
-    pub fn encode(self, width: u32, height: u32, data: &[u8]) -> ImgfileResult<()> {
+    /// Returns a `FarbfeldError::NotEnoughData` if the provided `data` slice is too short.
+    pub fn encode(self, width: u32, height: u32, data: &[u8]) -> FarbfeldResult<()> {
         let mut w = self.0;
         let len = (width * height) as usize * 4;
-        if data.len() < len { return Err(ImgfileError::NotEnoughData) }
-        try!(w.write_all("imagefile".as_bytes()));
+        if data.len() < len { return Err(FarbfeldError::NotEnoughData) }
+        try!(w.write_all("farbfeld".as_bytes()));
         try!(w.write_u32::<BigEndian>(width));
         try!(w.write_u32::<BigEndian>(height));
         try!(w.write_all(data));

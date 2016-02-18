@@ -1,14 +1,13 @@
 [package]
-name = "imagefile"
-version = "0.1.0"
-description = "Imagefile is a simple image encoding format."
-license-file = "UNLICENSE"
+name = "farbfeld"
+version = "0.2.0"
+description = "A simple encoding format from suckless."
+license = "Unlicense"
 
 authors = ["Juggle-Tux <juggle-tux@users.noreply.github.com>"]
-documentation = "https://juggle-tux.github.io/imagefile-rs"
-homepage = "https://github.com/juggle-tux/imagefile-rs"
-repository = "https://github.com/juggle-tux/imagefile-rs.git"
+documentation = "https://juggle-tux.github.io/farbfeld-rs"
+homepage = "https://github.com/juggle-tux/farbfeld-rs"
+repository = "https://github.com/juggle-tux/farbfeld-rs.git"
 
 [dependencies]
-
-byteorder = "*"
+byteorder = "0.4"
