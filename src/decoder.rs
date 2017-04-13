@@ -17,9 +17,9 @@ impl<R: Read + Seek> FarbfeldDecoder<R> {
     /// Returns FarbfeldError::FormatError if the magic number does not match `farbfeld`
     pub fn new(r: R) -> FarbfeldResult<FarbfeldDecoder<R>> {
         let mut r = r;
-        try!(r.seek(SeekFrom::Start(0)));
+        r.seek(SeekFrom::Start(0))?;
         let head = &mut [0; HEADER_LEN as usize];
-        try!(r.read_exact(head));
+        r.read_exact(head)?;
         if &head[..8] != b"farbfeld" {
                 return Err(FarbfeldError::FormatError("unexpected magic number".to_string()))
         }
@@ -49,17 +49,17 @@ impl<R: Read + Seek> FarbfeldDecoder<R> {
 
         let row_len = self.row_len();
         let offset = HEADER_LEN + row as u64 * row_len as u64;
-        try!(self.r.seek(SeekFrom::Start(offset)));
-        try!(self.r.read_exact(&mut buf[..row_len]));
+        self.r.seek(SeekFrom::Start(offset))?;
+        self.r.read_exact(&mut buf[..row_len])?;
         Ok(row_len)
     }
 
     /// Read whole image into a `Vec<u8>`.
     pub fn read_image(&mut self) -> FarbfeldResult<Vec<u8>> {
-        try!(self.r.seek(SeekFrom::Start(HEADER_LEN)));
+        self.r.seek(SeekFrom::Start(HEADER_LEN))?;
         let num_raw_bytes = self.height as usize * self.row_len();
         let mut buf = vec![0; num_raw_bytes];
-        try!(self.r.read_exact(&mut buf));
+        self.r.read_exact(&mut buf)?;
         Ok(buf)
     }
 }
