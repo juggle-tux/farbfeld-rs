@@ -31,12 +31,12 @@ impl<R: Read + Seek> Decoder<R> {
     }
 
     /// Returns the `(width, height)` of the image.
-    pub fn dimensions(&mut self) -> (u32, u32) {
+    pub fn dimensions(&self) -> (u32, u32) {
         (self.width, self.height)
     }
 
     /// Returns the length in bytes for a row.
-    pub fn row_len(&mut self) -> usize {
+    pub fn row_len(&self) -> usize {
         self.width as usize * 8
     }
 
