@@ -70,20 +70,11 @@ mod tests {
     use tests::IMAGE_DATA;
     use Error;
 
-    macro_rules! try_panic {
-        ($e:expr) => {
-            match $e {
-                Err(e) => panic!(e),
-                Ok(res) => res,
-            }
-        }
-    }
-
     #[test]
     fn invalid_magic() {
         let mut img_data = Vec::new();
-        try_panic!(img_data.write(b"test fail"));
-        try_panic!(img_data.write(&IMAGE_DATA[8..]));
+        img_data.write(b"test fail").unwrap();
+        img_data.write(&IMAGE_DATA[8..]).unwrap();
         let buf = Cursor::new(img_data);
 
         match Decoder::new(buf) {
@@ -114,7 +105,7 @@ mod tests {
     #[test]
     fn truncate_data() {
         let mut img_data = Vec::with_capacity(IMAGE_DATA.len()-1);
-        try_panic!(img_data.write_all(&IMAGE_DATA[..IMAGE_DATA.len()-1]));
+        img_data.write_all(&IMAGE_DATA[..IMAGE_DATA.len()-1]).unwrap();
         let buf = Cursor::new(img_data);
         let mut img = Decoder::new(buf).unwrap();
         match img.read_image() {
