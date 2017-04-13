@@ -78,12 +78,3 @@ impl From<io::Error> for Error {
         Error::IoError(err)
     }
 }
-
-impl From<byteorder::Error> for Error {
-    fn from(err: byteorder::Error) -> Error {
-        match err {
-            byteorder::Error::UnexpectedEOF => Error::ImageEnd,
-            byteorder::Error::Io(err) => Error::IoError(err),
-        }
-    }
-}

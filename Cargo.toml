@@ -1,13 +1,12 @@
 [package]
-name = "farbfeld"
-version = "0.2.0"
-description = "A simple encoding format from suckless."
-license = "Unlicense"
-
 authors = ["Juggle-Tux <juggle-tux@users.noreply.github.com>"]
+description = "A simple encoding format from suckless."
 documentation = "https://juggle-tux.github.io/farbfeld-rs"
 homepage = "https://github.com/juggle-tux/farbfeld-rs"
+license = "Unlicense"
+name = "farbfeld"
 repository = "https://github.com/juggle-tux/farbfeld-rs.git"
+version = "0.2.0"
 
 [dependencies]
-byteorder = "0.4"
+byteorder = "1.0.0"
