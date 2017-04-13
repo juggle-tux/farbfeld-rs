@@ -14,7 +14,7 @@ pub struct Decoder<R> {
 impl<R: Read + Seek> Decoder<R> {
     /// Create a new decoder from `r` and parse the header.
     /// # Failures
-    /// Returns FarbfeldError::FormatError if the magic number does not match `farbfeld`
+    /// Returns Error::FormatError if the magic number does not match `farbfeld`
     pub fn new(mut r: R) -> Result<Decoder<R>> {
         let head = &mut [0; HEADER_LEN as usize];
         r.seek(SeekFrom::Start(0))?;
@@ -42,7 +42,7 @@ impl<R: Read + Seek> Decoder<R> {
 
     /// Read a single row from the image and return the bytes read.
     /// # Failures
-    /// Returns a `FarbfeldError::ImageEnd` if the `row` is greater as the `height`
+    /// Returns a `Error::ImageEnd` if the `row` is greater as the `height`
     pub fn read_row(&mut self, row: u32,  buf: &mut [u8]) -> Result<usize> {
         if row > self.height { return Err(Error::ImageEnd) }
 
@@ -82,7 +82,7 @@ mod tests {
                 Error::FormatError(_) => return,
                 e => panic!("{:?}", e),
             },
-            Ok(_) => panic!("Got Ok expected FarbfeldError::FormatError"),
+            Ok(_) => panic!("Got Ok expected Error::FormatError"),
         }
     }
 
@@ -97,7 +97,7 @@ mod tests {
                 } else { panic!("{:?}", e) }
             },
             Err(e) => panic!("{:?}", e),
-            Ok(_) => panic!("Got Ok expected FarbfeldError::FormatError"),
+            Ok(_) => panic!("Got Ok expected Error::FormatError"),
         }
 
     }
@@ -115,7 +115,7 @@ mod tests {
                 } else { panic!("{:?}", e) }
             },
             Err(e) => panic!("{:?}", e),
-            Ok(_) => panic!("Got Ok expected FarbfeldError::FormatError"),
+            Ok(_) => panic!("Got Ok expected Error::FormatError"),
         }
     }
 }

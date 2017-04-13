@@ -9,7 +9,7 @@ pub struct Encoder<W: Write>(pub W);
 impl<W: Write> Encoder<W> {
     /// Encodes a image with `width`, `height` and `data` into a farbfeld.
     /// # Failures
-    /// Returns a `FarbfeldError::NotEnoughData` if the provided `data` slice is too short.
+    /// Returns a `Error::NotEnoughData` if the provided `data` slice is too short.
     pub fn encode(self, width: u32, height: u32, data: &[u8]) -> Result<()> {
         let mut w = self.0;
         let len = (width * height) as usize * 4;
