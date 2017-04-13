@@ -8,15 +8,26 @@
 
 extern crate byteorder;
 
-pub use decoder::FarbfeldDecoder;
-pub use encoder::FarbfeldEncoder;
+use std::error;
+use std::fmt;
+use std::io;
+
+mod decoder;
+mod encoder;
+#[cfg(test)]
+mod tests;
+
+pub use decoder::Decoder;
+pub use encoder::Encoder;
+
+const HEADER_LEN: u64 = 8+4+4;
 
 /// Result of an image decoding/encoding process
-pub type FarbfeldResult<T> = Result<T, FarbfeldError>;
+pub type Result<T> = ::std::result::Result<T, Error>;
 
 /// An enumeration of decoding/encoding Errors
 #[derive(Debug)]
-pub enum FarbfeldError {
+pub enum Error {
      /// The Image is not formatted properly
     FormatError(String),
 
@@ -31,58 +42,48 @@ pub enum FarbfeldError {
     ImageEnd
 }
 
-const HEADER_LEN: u64 = 8+4+4;
 
-mod decoder;
-mod encoder;
-#[cfg(test)]
-mod tests;
-
-use std::error::Error;
-use std::fmt;
-use std::io;
-
-impl fmt::Display for FarbfeldError {
-    fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+impl fmt::Display for Error {
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            &FarbfeldError::FormatError(ref e) => write!(fmt, "Format error: {}", e),
-            &FarbfeldError::NotEnoughData => write!(fmt, "Not enough data was provided to the \
+            &Error::FormatError(ref e) => write!(fmt, "Format error: {}", e),
+            &Error::NotEnoughData => write!(fmt, "Not enough data was provided to the \
                                                          Decoder to decode the image"),
-            &FarbfeldError::IoError(ref e) => e.fmt(fmt),
-            &FarbfeldError::ImageEnd => write!(fmt, "The end of the image has been reached")
+            &Error::IoError(ref e) => e.fmt(fmt),
+            &Error::ImageEnd => write!(fmt, "The end of the image has been reached")
         }
     }
 }
 
-impl Error for FarbfeldError {
+impl error::Error for Error {
     fn description (&self) -> &str {
         match *self {
-            FarbfeldError::FormatError(..) => &"Format error",
-            FarbfeldError::NotEnoughData => &"Not enough data",
-            FarbfeldError::IoError(..) => &"IO error",
-            FarbfeldError::ImageEnd => &"Image end"
+            Error::FormatError(..) => &"Format error",
+            Error::NotEnoughData => &"Not enough data",
+            Error::IoError(..) => &"IO error",
+            Error::ImageEnd => &"Image end"
         }
     }
 
-    fn cause (&self) -> Option<&Error> {
+    fn cause (&self) -> Option<&error::Error> {
         match *self {
-            FarbfeldError::IoError(ref e) => Some(e),
+            Error::IoError(ref e) => Some(e),
             _ => None
         }
     }
 }
 
-impl From<io::Error> for FarbfeldError {
-    fn from(err: io::Error) -> FarbfeldError {
-        FarbfeldError::IoError(err)
+impl From<io::Error> for Error {
+    fn from(err: io::Error) -> Error {
+        Error::IoError(err)
     }
 }
 
-impl From<byteorder::Error> for FarbfeldError {
-    fn from(err: byteorder::Error) -> FarbfeldError {
+impl From<byteorder::Error> for Error {
+    fn from(err: byteorder::Error) -> Error {
         match err {
-            byteorder::Error::UnexpectedEOF => FarbfeldError::ImageEnd,
-            byteorder::Error::Io(err) => FarbfeldError::IoError(err),
+            byteorder::Error::UnexpectedEOF => Error::ImageEnd,
+            byteorder::Error::Io(err) => Error::IoError(err),
         }
     }
 }
