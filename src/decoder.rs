@@ -104,9 +104,7 @@ mod tests {
 
     #[test]
     fn truncate_data() {
-        let mut img_data = Vec::with_capacity(IMAGE_DATA.len()-1);
-        img_data.write_all(&IMAGE_DATA[..IMAGE_DATA.len()-1]).unwrap();
-        let buf = Cursor::new(img_data);
+        let buf = Cursor::new(&IMAGE_DATA[..IMAGE_DATA.len()-1]);
         let mut img = Decoder::new(buf).unwrap();
         match img.read_image() {
             Err(Error::IoError(e)) => {
