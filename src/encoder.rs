@@ -14,7 +14,7 @@ impl<W: Write> FarbfeldEncoder<W> {
         let mut w = self.0;
         let len = (width * height) as usize * 4;
         if data.len() < len { return Err(FarbfeldError::NotEnoughData) }
-        w.write_all("farbfeld".as_bytes())?;
+        w.write_all(b"farbfeld")?;
         w.write_u32::<BigEndian>(width)?;
         w.write_u32::<BigEndian>(height)?;
         w.write_all(data)?;
